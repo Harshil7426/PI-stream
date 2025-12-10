@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Drone Cam Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+/* -------- GLOBAL -------- */
+body{
+  background:#f4f4f7;
+  color:#222;
+  font-family:'Segoe UI', Tahoma, sans-serif;
+  margin:0;
+  text-align:center;
+}
+
+/* -------- TITLE -------- */
+h2{
+  margin-top:25px;
+  font-size:34px;
+  font-weight:600;
+  color:#2c3e50;
+  text-shadow:0 0 8px rgba(0,255,200,0.4);
+}
+
+/* -------- MODE BUTTONS CONTAINER -------- */
+.button-bar{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  margin-top:20px;
+  flex-wrap:wrap;
+  padding:10px 0;
+}
+
+/* -------- GLOWING BUTTONS -------- */
+button{
+  background:#fff;
+  color:#2c3e50;
+  border:2px solid #00e6a4;
+  padding:12px 20px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:500;
+  min-width:150px;
+  transition:0.28s ease;
+  box-shadow:0 0 6px rgba(0,255,200,0.3);
+}
+
+button:hover{
+  background:#00e6a4;
+  color:#fff;
+  box-shadow:0 0 20px rgba(0,255,200,0.8);
+  transform:translateY(-3px);
+}
+
+/* -------- ACTIVE GLOW SLIDER -------- */
+.active-indicator{
+  position:absolute;
+  bottom:-4px;
+  width:150px;
+  height:4px;
+  background:#00e6a4;
+  border-radius:2px;
+  transition:0.35s;
+  box-shadow:0 0 12px #00e6a4;
+}
+
+/* -------- SLIDER PANEL -------- */
+.slider-container{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
+
+.slider-box{
+  width:230px;
+  background:#ffffff;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  border-left:4px solid #00e6a4;
+  text-align:left;
+  font-size:15px;
+  color:#333;
+}
+
+/* -------- MODERN SLIDERS -------- */
+input[type=range]{
+  width:100%;
+  height:5px;
+  background:#ddd;
+  border-radius:5px;
+  outline:none;
+  -webkit-appearance:none;
+}
+
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:16px;
+  height:16px;
+  background:#00e6a4;
+  border-radius:50%;
+  cursor:pointer;
+  box-shadow:0 0 10px #00e6a4;
+}
+
+/* -------- VIDEO -------- */
+#feed{
+  width:90%;
+  max-width:950px;
+  border:4px solid #00e6a4;
+  border-radius:14px;
+  margin-top:25px;
+  box-shadow:0 0 20px rgba(0,255,200,0.5);
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>🚁 Smart Drone Live Feed</h2>
+
+<!-- MODE BUTTONS -->
+<div class="button-bar">
+
+  <button onclick="setMode('normal'); moveIndicator(this)">Normal View</button>
+  <button onclick="setMode('yolo'); moveIndicator(this)">Human Detection</button>
+  <button onclick="setMode('thermal'); moveIndicator(this)">Thermal Vision</button>
+  <button onclick="setMode('edge'); moveIndicator(this)">Edge Detect</button>
+  <button onclick="setMode('night'); moveIndicator(this)">Night Vision</button>
+
+  <div class="active-indicator" id="indicator"></div>
+</div>
+
+<!-- SLIDERS -->
+<div class="slider-container">
+
+  <div class="slider-box">
+    <b>Brightness:</b> <span id="bVal">1</span>
+    <input type="range" min="0" max="2" step="0.1" value="1"
+           oninput="updateValue('brightness', this.value, 'bVal')">
+  </div>
+
+  <div class="slider-box">
+    <b>Contrast:</b> <span id="cVal">1</span>
+    <input type="range" min="0" max="3" step="0.1" value="1"
+           oninput="updateValue('contrast', this.value, 'cVal')">
+  </div>
+
+  <div class="slider-box">
+    <b>Saturation:</b> <span id="sVal">1</span>
+    <input type="range" min="0" max="3" step="0.1" value="1"
+           oninput="updateValue('saturation', this.value, 'sVal')">
+  </div>
+
+</div>
+
+<!-- VIDEO FEED -->
+<img id="feed" src="/video_feed">
+
+
+<script>
+/* -------- SEND MODE TO BACKEND -------- */
+function setMode(mode){
+  fetch('/set_mode/' + mode);
+}
+
+/* -------- SEND SLIDER VALUE TO BACKEND -------- */
+function updateValue(type, value, labelID){
+  document.getElementById(labelID).innerText = value;
+  fetch(`/set_param/${type}/${value}`);
+}
+
+/* -------- ANIMATE ACTIVE INDICATOR -------- */
+function moveIndicator(btn){
+  const indicator = document.getElementById("indicator");
+  indicator.style.width = btn.offsetWidth + "px";
+  indicator.style.left = btn.offsetLeft + "px";
+}
+
+/* Set initial indicator position */
+window.onload = () => {
+  let firstBtn = document.querySelector(".button-bar button");
+  moveIndicator(firstBtn);
+};
+</script>
+
+</body>
+</html>

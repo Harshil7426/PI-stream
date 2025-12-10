@@ -1,0 +1,9 @@
+.
+├── cam.py
+├── templates
+│   └── index.html
+├── testing.py
+├── tree.txt
+└── yolov8n.pt
+
+2 directories, 5 files
