@@ -1,5 +1,4 @@
-# Smart Drone Cam Dashboard — README
-
+Live PI stream with human detection
 ## Description of project
 
 Smart Drone Cam Dashboard is a real-time web dashboard that captures video from a camera (Raspberry Pi camera, ESP32-CAM, or USB webcam), processes each video frame with OpenCV, optionally runs YOLOv8 human detection, applies vision filters (thermal, edge, night), and streams the processed video over the local network using Flask (MJPEG). The dashboard provides sliders to adjust brightness, contrast and saturation live, and includes an experimental tracking branch (SORT) to keep consistent IDs for detected people.
@@ -267,15 +266,3 @@ python testing.py        # experimental tracker
 
 ---
 
-## License
-
-This project is released under the **MIT License**.
-
----
-
-If you want, I can now:
-
-* produce a **single-file `README.md`** ready to paste to your repo (exact copyable markdown), or
-* create a **visual architecture PNG** (diagram) and embed as part of the README.
-
-Tell me which (README-only or README + diagram PNG) and I’ll paste the full markdown directly.
